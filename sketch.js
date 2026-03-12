@@ -13,6 +13,7 @@ let level;
 let player;
 let cam;
 
+// Controls overlay
 let showControls = false;
 
 let helpBtn = { x: 0, y: 0, w: 36, h: 36 };
@@ -27,6 +28,7 @@ function preload() {
   keyImg = loadImage("assets/key.png");
   heartImg = loadImage("assets/heart.png");
   playerImg = loadImage("assets/player.png");
+
   pixelFont = loadFont("assets/fonts/PressStart2P-Regular.ttf");
 
   allLevelsData = loadJSON("levels.json");
@@ -36,7 +38,7 @@ function preload() {
 // Setup canvas
 // --------------------
 function setup() {
-  createCanvas(VIEW_W, VIEW_H);
+  createCanvas(800, 480);
   textFont(pixelFont);
   textSize(15);
 
@@ -61,7 +63,7 @@ function drawStart() {
   const boxW = min(640, width * 0.8);
   const boxH = 230;
   const boxX = width / 2 - boxW / 2;
-  const boxY = 125;
+  const boxY = 130;
 
   fill(245);
   stroke(0, 200);
@@ -71,20 +73,20 @@ function drawStart() {
   fill(0);
   textStyle(BOLD);
   textSize(33);
-  text("GOAL", width / 2, boxY + 60);
+  text("GOAL", width / 2, boxY + 50);
 
   textSize(15);
   fill(30);
-  text("Find 3 keys and unlock the door!", width / 2, boxY + 95);
+  text("Collect 3 KEYS to unlock the door", width / 2, boxY + 80);
 
   stroke(0, 80);
-  line(boxX + 50, boxY + 112, boxX + boxW - 50, boxY + 112);
+  line(boxX + 50, boxY + 98, boxX + boxW - 50, boxY + 98);
   noStroke();
 
   const col1 = width / 2 - 200;
   const col2 = width / 2;
   const col3 = width / 2 + 200;
-  const rowY = boxY + 155;
+  const rowY = boxY + 140;
 
   fill(125, 207, 0);
   textStyle(BOLD);
@@ -117,14 +119,14 @@ function drawStart() {
   const btnW = 200;
   const btnH = 50;
   const btnX = width / 2 - btnW / 2;
-  const btnY = height - 105;
+  const btnY = height - 100;
 
   fill(255);
-  rect(btnX, btnY, btnW, btnH, 10);
+  rect(btnX, btnY, btnW, btnH, 8);
 
   fill(0);
   textSize(18);
-  text("START GAME", width / 2, btnY + btnH / 2 + 9);
+  text("START GAME", width / 2, btnY + btnH / 2 + 8);
 
   textSize(10);
   fill(255);
@@ -132,61 +134,13 @@ function drawStart() {
 }
 
 // --------------------
-// STORY SCREEN
-// --------------------
-function drawStoryScreen() {
-  background(0);
-
-  textAlign(CENTER, CENTER);
-
-  // main story text
-  fill(255);
-  textSize(15);
-
-  text(
-    "Depression affects 5% of the global population.\n\n" +
-      "Rachel is one of them.\n\n" +
-      "Because of depression, Rachel struggles\n" +
-      "to complete everyday tasks.\n\n" +
-      "Help Rachel get through the day",
-    width / 2,
-    height / 2 - 40,
-  );
-
-  // glowing line
-  push();
-
-  drawingContext.shadowBlur = 25;
-  drawingContext.shadowColor = "rgba(180,255,0,0.9)";
-
-  fill(180, 255, 0);
-  textSize(18);
-
-  text("and find her way home.", width / 2, height / 2 + 75);
-
-  pop();
-
-  const btnW = 160;
-  const btnH = 50;
-  const btnX = width / 2 - btnW / 2;
-  const btnY = height - 100;
-
-  fill(255);
-  rect(btnX, btnY, btnW, btnH, 10);
-
-  fill(0);
-  textSize(18);
-  text("NEXT", width / 2, btnY + btnH / 2 + 6);
-}
-
-// --------------------
-// Start button
+// Start button click
 // --------------------
 function startMousePressed() {
   const btnW = 200;
   const btnH = 50;
   const btnX = width / 2 - btnW / 2;
-  const btnY = height - 105;
+  const btnY = height - 120;
 
   if (
     mouseX >= btnX &&
@@ -194,7 +148,8 @@ function startMousePressed() {
     mouseY >= btnY &&
     mouseY <= btnY + btnH
   ) {
-    currentScreen = "story";
+    currentScreen = "game";
+    loadLevel(levelIndex);
   }
 }
 
@@ -222,11 +177,6 @@ function loadLevel(i) {
 function draw() {
   if (currentScreen === "start") {
     drawStart();
-    return;
-  }
-
-  if (currentScreen === "story") {
-    drawStoryScreen();
     return;
   }
 
@@ -260,30 +210,204 @@ function draw() {
 }
 
 // --------------------
-// Mouse input
+// Draw keyboard key
 // --------------------
-function mousePressed() {
+function drawKey(x, y, label) {
+  const w = 36;
+  const h = 30;
+
+  fill(255);
+  stroke(0, 80);
+  rect(x, y - h / 2, w, h, 6);
+
+  fill(0);
+  noStroke();
+  textAlign(CENTER, CENTER);
+  textSize(14);
+  text(label, x + w / 2, y);
+}
+
+// --------------------
+// Controls overlay
+// --------------------
+function drawControlsOverlay() {
+  fill(0, 160);
+  rect(0, 0, width, height);
+
+  const boxW = 520;
+  const boxH = 340;
+  const boxX = width / 2 - boxW / 2;
+  const boxY = height / 2 - boxH / 2;
+
+  fill(255, 235);
+  stroke(40);
+  strokeWeight(2);
+  rect(boxX, boxY, boxW, boxH, 16);
+
+  fill(0);
+  noStroke();
+
+  textAlign(CENTER);
+  textSize(30);
+  text("CONTROLS", width / 2, boxY + 50);
+
+  const rowStart = boxY + 100;
+  const spacing = 42;
+
+  const keyStartX = width / 2 - 150;
+  const textX = width / 2 + 20;
+
+  textAlign(LEFT, CENTER);
+  textSize(16);
+
+  drawKey(keyStartX, rowStart, "→");
+  drawKey(keyStartX + 50, rowStart, "D");
+  text("Move Right", textX, rowStart);
+
+  drawKey(keyStartX, rowStart + spacing, "←");
+  drawKey(keyStartX + 50, rowStart + spacing, "A");
+  text("Move Left", textX, rowStart + spacing);
+
+  drawKey(keyStartX, rowStart + spacing * 2, "↑");
+  drawKey(keyStartX + 50, rowStart + spacing * 2, "W");
+  text("Move Up", textX, rowStart + spacing * 2);
+
+  drawKey(keyStartX, rowStart + spacing * 3, "↓");
+  drawKey(keyStartX + 50, rowStart + spacing * 3, "S");
+  text("Move Down", textX, rowStart + spacing * 3);
+
+  stroke(0, 60);
+  strokeWeight(1);
+
+  const linePad = 100;
+  const lineOffset = 20; // controls how far below the text the line appears
+
+  line(
+    boxX + linePad,
+    rowStart + lineOffset,
+    boxX + boxW - linePad,
+    rowStart + lineOffset,
+  );
+
+  line(
+    boxX + linePad,
+    rowStart + spacing + lineOffset,
+    boxX + boxW - linePad,
+    rowStart + spacing + lineOffset,
+  );
+
+  line(
+    boxX + linePad,
+    rowStart + spacing * 2 + lineOffset,
+    boxX + boxW - linePad,
+    rowStart + spacing * 2 + lineOffset,
+  );
+
+  line(
+    boxX + linePad,
+    rowStart + spacing * 3 + lineOffset,
+    boxX + boxW - linePad,
+    rowStart + spacing * 3 + lineOffset,
+  );
+
+  noStroke();
+
+  fill(40);
+  textSize(12);
+  textAlign(CENTER);
+  text("Press H anytime to toggle this screen", width / 2, boxY + 270);
+
+  closeBtn.x = width / 2 - closeBtn.w / 2;
+  closeBtn.y = boxY + boxH - 50;
+
+  fill(210);
+  rect(closeBtn.x, closeBtn.y, closeBtn.w, closeBtn.h, 10);
+
+  fill(0);
+  textSize(14);
+  text("CLOSE", width / 2, closeBtn.y + 20);
+}
+
+// --------------------
+// Help button
+// --------------------
+function drawHelpButton() {
+  helpBtn.x = width - 50;
+  helpBtn.y = 12;
+
+  fill(255);
+  stroke(0);
+  rect(helpBtn.x, helpBtn.y, helpBtn.w, helpBtn.h, 8);
+
+  fill(0);
+  noStroke();
+  textAlign(CENTER, CENTER);
+  textSize(18);
+  text("?", helpBtn.x + helpBtn.w / 2, helpBtn.y + helpBtn.h / 2);
+}
+
+// --------------------
+// HUD
+// --------------------
+function drawHUD() {
+  const pad = 14;
+
+  noStroke();
+  fill(0);
+  textAlign(LEFT, TOP);
+  textSize(14);
+
+  const keysText = `Keys: ${player.keysCollected}/${player.keysNeeded}`;
+  text(keysText, pad, pad);
+
+  const barX = pad;
+  const barY = pad + 26;
+  const barW = 180;
+  const barH = 14;
+
+  fill(220);
+  rect(barX, barY, barW, barH, 6);
+
+  const t = player.energy / player.energyMax;
+  fill(70);
+  rect(barX, barY, barW * t, barH, 6);
+
+  fill(0);
+  text(`Energy`, barX, barY + 18);
+
+  if (player.isLowEnergy()) {
+    const a = map(1 - t, 0, 1, 0, 160);
+    fill(0, a);
+    rect(0, 0, width, height);
+  }
+}
+
+// --------------------
+// Inputs
+// --------------------
+function keyPressed() {
   if (currentScreen === "start") {
-    startMousePressed();
+    if (keyCode === ENTER) currentScreen = "game";
     return;
   }
 
-  if (currentScreen === "story") {
-    const btnW = 160;
-    const btnH = 50;
-    const btnX = width / 2 - btnW / 2;
-    const btnY = height - 100;
+  if (currentScreen === "end") {
+    if (key === "r" || key === "R") currentScreen = "start";
+    return;
+  }
 
-    if (
-      mouseX >= btnX &&
-      mouseX <= btnX + btnW &&
-      mouseY >= btnY &&
-      mouseY <= btnY + btnH
-    ) {
-      currentScreen = "game";
-      loadLevel(levelIndex);
-    }
+  if (key === "h" || key === "H") {
+    showControls = !showControls;
+  }
 
+  if (key === "r" || key === "R") {
+    loadLevel(levelIndex);
+  }
+}
+
+function mousePressed() {
+  if (currentScreen === "start") {
+    startMousePressed();
     return;
   }
 
