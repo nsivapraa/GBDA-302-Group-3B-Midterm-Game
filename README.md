@@ -29,7 +29,7 @@ Keep Moving Forward is a game that aims to build empathy for people living with 
 a. Post-Playtest:
 
 - Change #1: We changed the environment to be a maze instead of an open field to make the game more challenging
-- Change #2: We had hearts respawn 10 seconds after use so players could use them continously throughout the game
+- Change #2: We had hearts respawn 10 seconds after use, so players could use them continuously throughout the game
 - Change #3: We added a "Help" Screen to make the game easier for first-time players to understand
 
 b. Post-Showcase
@@ -49,12 +49,14 @@ Font: https://fonts.google.com/specimen/Press+Start+2P
 
 ## References
 
-Reseaerch used to understand depression:
+Research used to understand depression:
 
 ‌[1]
 World. 2025. Depressive disorder (depression). Who.int. Retrieved March 12, 2026 from https://www.who.int/news-room/fact-sheets/detail/depression
+
 [2]
 Villarroel MA and Terlizzi EP. 2020. Symptoms of Depression in Young Adults. Cdc.gov. Retrieved March 12, 2026 from https://www.cdc.gov/nchs/products/databriefs/db379.htm?utm_medium=email&utm_source=transaction#Suggested_citation
+
 ‌[3]
 George W. Brown and Bernice Andrews. 1986. Social Support and Depression. Dynamics of Stress (1986), 257–282. DOI:https://doi.org/10.1007/978-1-4684-5122-1_13
 
